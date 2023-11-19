@@ -35,8 +35,9 @@ fun main() {
         val saintPetersburgId = Cities.insert {
             it[name] = "St. Petersburg"
             it[population] = 4500
-        } get Cities.id
+        } //get Cities.id
 
+        println("Cities ID: ${saintPetersburgId.insertedCount}")
 
         // 'select *' SQL: SELECT Cities.id, Cities.name FROM Cities
         println("Cities: ${Cities.selectAll()}")
@@ -44,14 +45,16 @@ fun main() {
 
         val munichId = Cities.insert {
             it[name] = "Munich"
-        } get Cities.id
+            it[population] = 4500
+        }
+        //get Cities.id
 
-        val pragueId = Cities.insert {
-            it.update(name, stringLiteral("   Prague   ").trim().substring(1, 2))
-        }[Cities.id]
-
-        val pragueName = Cities.select { Cities.id eq pragueId }.single()[Cities.name]
-        println("pragueName = $pragueName")
+//        val pragueId = Cities.insert {
+//            it.update(name, stringLiteral("   Prague   ").trim().substring(1, 2))
+//        } [Cities.id]
+//
+//        val pragueName = Cities.select { Cities.id eq pragueId}.single()[Cities.name]
+//        println("pragueName = $pragueName")
 
 //        Users.insert {
 //            it[id] = "andrey"

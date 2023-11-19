@@ -1,5 +1,7 @@
 val exposedVersion: String by project
 val postgres_version: String by project
+val logback_version: String by project
+
 plugins {
     kotlin("jvm") version "1.9.20"
     application
@@ -18,6 +20,8 @@ dependencies {
     //implementation("org.postgresql:postgresql:$postgres_version")
     //implementation("com.impossibl.pgjdbc-ng:pgjdbc-ng:LATEST")
     implementation("com.impossibl.pgjdbc-ng:pgjdbc-ng:0.8.9")
+    implementation("ch.qos.logback:logback-classic:$logback_version")
+
 
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-crypt:$exposedVersion")
