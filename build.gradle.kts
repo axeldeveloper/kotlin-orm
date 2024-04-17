@@ -27,21 +27,57 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-crypt:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-
-    implementation("org.jetbrains.exposed:exposed-jodatime:$exposedVersion")
-    // or
+    //implementation("org.jetbrains.exposed:exposed-jodatime:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
-    // or
     implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
-
     implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-money:$exposedVersion")
-    //implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
+
+
+    implementation("io.netty:netty-all:4.0.4.Final")
+
+
 }
 
 tasks.test {
     useJUnitPlatform()
 }
+
+
+tasks.jar {
+
+    manifest {
+        attributes["Main-Class"] = "MainKt"
+    }
+    configurations["compileClasspath"].forEach { file: File ->
+        from(zipTree(file.absoluteFile))
+    }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+/*
+tasks.jar {
+    manifest.attributes["Main-Class"] = "MainKt"
+    manifest.attributes["Class-Path"] = configurations
+        .runtimeClasspath
+        .get()
+        .joinToString(separator = " ") { file ->
+            "libs/${file.name}"
+        }
+
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+*/
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    //dependencies {
+    //    classpath 'com.impossibl.pgjdbc-ng:pgjdbc-ng:0.8.9'
+    //}
+}
+
 
 kotlin {
     jvmToolchain(8)

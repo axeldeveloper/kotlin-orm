@@ -1,66 +1,80 @@
 
 
+import dto.CityDto
+import model.Cities
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.like
 import org.jetbrains.exposed.sql.transactions.transaction
-
-
-//object Users : Table() {
-//    val id: Column<String> = varchar("id", 10)
-//    val name: Column<String> = varchar("name", length = 50)
-//    val cityId: Column<Int?> = (integer("city_id") references Cities.id).nullable()
-//    override val primaryKey = PrimaryKey(id, name = "PK_User_ID") // name is optional here
-//}
-
-object Cities : Table() {
-    val id: Column<Int> = integer("id")
-    val name: Column<String> = varchar("name", length = 50)
-    val population: Column<Int?> = (integer("population") ).nullable()
-
-    override val primaryKey = PrimaryKey(id, name = "cities_pkey") // name is optional here
-}
+import services.StarService
+import services.CityService
+import table.UserTable
 
 fun main() {
     Database.connect("jdbc:pgsql://localhost:5432/kto_db",
         /*driver = "org.postgresql.Driver",*/
         user = "postgres", password = "postgres")
 
+    println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    println(" INICIANDO ")
     transaction {
         addLogger(StdOutSqlLogger)
-        //addLogger(StdOutSqlLogger)
 
-        //SchemaUtils.create(Cities, Users)
-        SchemaUtils.create(Cities)
+        //SchemaUtils.create(Cities, UserTable)
+        //SchemaUtils.create(Cities)
+        //SchemaUtils.create(StarWarsFilms)
 
-        val saintPetersburgId = Cities.insert {
-            it[name] = "St. Petersburg"
-            it[population] = 4500
-        } //get Cities.id
-
-        println("Cities ID: ${saintPetersburgId.insertedCount}")
-
-        // 'select *' SQL: SELECT Cities.id, Cities.name FROM Cities
-        println("Cities: ${Cities.selectAll()}")
-
-
-        val munichId = Cities.insert {
-            it[name] = "Munich"
-            it[population] = 4500
+        println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        println("Manipulation StarWarsFilm ")
+        val starManager = StarService()
+        //starManager.create("Mandalorian 3 T" , 3, "Okuma matata")
+        val result = starManager.getAlls()
+        for (s in result) {
+            println("${s.id}: ${s.name}")
         }
-        //get Cities.id
 
-//        val pragueId = Cities.insert {
-//            it.update(name, stringLiteral("   Prague   ").trim().substring(1, 2))
-//        } [Cities.id]
-//
-//        val pragueName = Cities.select { Cities.id eq pragueId}.single()[Cities.name]
-//        println("pragueName = $pragueName")
+        val seq = starManager.getWhereSeq(1)
+        println("StarWarsFilms Where: ${seq}")
+        println("StarWarsFilms Result: ${result}")
 
-//        Users.insert {
-//            it[id] = "andrey"
-//            it[name] = "Andrey"
-//            it[Users.cityId] = saintPetersburgId
-//        }
+
+
+
+        println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        println("manipulation Cities ")
+        val cityService = CityService()
+        //val sp = CityDto(null, "Campo Gra", 8500)
+        //val spUp = CityDto(null, "Campo Grande", 3500)
+        //val spId = cityService.insert(sp)
+        //println("Cities ID: ${spId}")
+        //cityService.update(spId , spUp)
+        //cityService.delete(21)
+
+
+        val cities = cityService.getAlls()
+        for (s in cities) {
+            println("${s.id}: ${s.name}")
+        }
+
+        val citi = cityService.find(21)
+        println("AQUIIIII : ${citi}")
+        if (citi != null) {
+            println("Name = ${citi.name}")
+        }
+
+
+
+
+        val pragueName = Cities.select { Cities.id eq 21}.single()[Cities.name]
+        println("pragueName = $pragueName")
+
+        val citin = cityService.getWhereName(pragueName)
+        println("List = $citin")
+
+
+        UserTable.insert {
+            //it[id] = "andrey"
+            it[name] = "Andrey"
+            it[cityId] = citi?.id
+        }
 
 //        Users.insert {
 //            it[id] = "sergey"
@@ -92,13 +106,7 @@ fun main() {
 //
 //        Users.deleteWhere{ Users.name like "%thing" }
 
-        println("All cities:")
 
-        for (city in Cities.selectAll()) {
-            println("${city[Cities.id]}: ${city[Cities.name]}")
-        }
-
-        println("Manual join:")
 
 //        (Users innerJoin Cities)
 //            .slice(Users.name, Cities.name)
