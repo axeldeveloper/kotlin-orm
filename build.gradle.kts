@@ -34,7 +34,8 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-money:$exposedVersion")
 
 
-    implementation("io.netty:netty-all:4.0.4.Final")
+    //implementation("io.netty:netty-all:4.0.4.Final")
+    //implementation("io.netty:netty-all:4.1.68.Final")
 
 
 }
@@ -55,28 +56,17 @@ tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
-/*
-tasks.jar {
-    manifest.attributes["Main-Class"] = "MainKt"
-    manifest.attributes["Class-Path"] = configurations
-        .runtimeClasspath
-        .get()
-        .joinToString(separator = " ") { file ->
-            "libs/${file.name}"
-        }
-
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
-}
-*/
 
 buildscript {
     repositories {
         mavenCentral()
     }
-    //dependencies {
+    dependencies {
     //    classpath 'com.impossibl.pgjdbc-ng:pgjdbc-ng:0.8.9'
-    //}
+        classpath("com.impossibl.pgjdbc-ng:pgjdbc-ng:0.8.9")
+    }
 }
+
 
 
 kotlin {
